@@ -42,29 +42,26 @@ class Recuitee:
             self.user_tag = user_tag
         
         def get_stats(self):
-            acpt_input = True
-            while acpt_input:
-                response = requests.get(
-                    'https://api.clashofclans.com/v1/players/%23'+self.user_tag, headers = headers)
-                storage = response.json()
-            # print(storage)
-                try: 
-                    storage['reason'] == 'notFound'
-                    print("User doesn't exist!")
-                except:
-                    for key in storage:
-                        if key == "leagueTier":
-                            league = storage[key]["name"]
-                            #Get the int of the league that recruitee is in
-                            y=""
-                            for ch in league:
-                                if ch.isdigit():
-                                    y += ch 
-                        elif key == "townHallLevel":
-                            th_level = storage[key]
-                        
-                        if int(y) >= 0 & int(th_level) >= 0:
-                            acpt_input = False
+            #logic might be broken
+            response = requests.get(
+                'https://api.clashofclans.com/v1/players/%23'+self.user_tag, headers = headers)
+            storage = response.json()
+        # print(storage)
+            try: 
+                storage['reason'] == 'notFound'
+                print("User doesn't exist!")
+            except:
+                for key in storage:
+                    if key == "leagueTier":
+                        league = storage[key]["name"]
+                        #Get the int of the league that recruitee is in
+                        y=""
+                        for ch in league:
+                            if ch.isdigit():
+                                y += ch 
+                    elif key == "townHallLevel":
+                        th_level = storage[key]
+                    
                         
             # print(th_level, league)
             stats = [th_level, int(y)]    
@@ -150,8 +147,6 @@ def get_user():
                         acpt_input = False
             
         
-
-
 get_user()
 #jon was here
 #arkaaz was here
