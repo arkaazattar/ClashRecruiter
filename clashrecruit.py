@@ -86,7 +86,14 @@ class Recuitee:
 def get_user():
     # list of all league names, lowest to highest - prob not needed
     league_list = ["Skeleton", "Barbarian", "Archer", "Wizard", "Valkyrie", "Witch", "Golem", "P.E.K.K.A", "Titan", "Dragon", "Electro", "Legend"]
-    recruiting = input("Are you recuiting? Yes or no: ")
+    
+    invalid_input = True
+    while invalid_input:
+        recruiting = input("Are you recuiting? Yes or no: ").lower()
+        if recruiting == "yes" or  recruiting == "no":
+            invalid_input = False
+        else: print("Invalid input")
+
 
 #TESTING OBJECTS HERE !! !! !!
     if recruiting == "Test":
