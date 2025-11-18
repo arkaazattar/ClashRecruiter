@@ -21,8 +21,8 @@ class Recruiter:
         response = requests.get(
             'https://api.clashofclans.com/v1/clans/%23'+self.clan_tag, headers = headers)
         #Store api info
-        storage = response.json()
-        print(storage)
+        self.storage = response.json()
+        #print(self.storage)
 
     def post_ad(self):
         print("Hello World")
@@ -90,13 +90,45 @@ def get_user():
     invalid_input = True
     while invalid_input:
         recruiting = input("Are you recuiting? Yes or no: ").lower()
-        if recruiting == "yes" or  recruiting == "no":
+        if recruiting == "yes" or  recruiting == "no" or recruiting == 'test':
             invalid_input = False
         else: print("Invalid input")
+    
+    if recruiting == 'yes': #need to implement calling of other functtions
+        invalid_clan = True
+        while invalid_clan:
+            name = input("Enter Name: ")
+            clan_tag = input("Enter Clan Tag: ")
+            if clan_tag[0] == '#':
+                clan_tag = clan_tag[1:]
+            clan = Recruiter(name, clan_tag)
+            clan.get_clan_info()
+
+            if clan.storage.get('reason') == 'notFound':
+                print("Clan not found, try again.")
+            else:
+                invalid_clan = False
+        print("Exited loop, clan is real")
+
+    
+    elif recruiting == 'no' : # case that they are looking for a clan
+        invalid_input = True
+        while invalid_input:
+            looking_for_clan = input("Are you looking for a clan? Yes or no: ").lower()
+            if looking_for_clan == "yes" or  looking_for_clan == "no":
+                invalid_input = False
+            else: print("Invalid input")
+
+        if looking_for_clan == 'yes':
+            pass
+
+        if looking_for_clan == "no":
+            return(print("Thank you for trying our app."))
+        
 
 
 #TESTING OBJECTS HERE !! !! !!
-    if recruiting == "Test":
+    if recruiting == "test":
         #INITIALIZE RECRUITER TEST
         name = input("Recruiter Name: ")
         clan_tag = input("Clan tag: ")
