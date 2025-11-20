@@ -6,6 +6,23 @@ headers = {
     "Authorization" :"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImRlYTUzNWVhLTljYTAtNDFmMC04MDJlLWIzZjk4YzAyMmMxNCIsImlhdCI6MTc2MjY0NzgxMSwic3ViIjoiZGV2ZWxvcGVyLzI4NjU3YTI4LTk5NWQtYmY3YS05NzRlLWEwNDViMWU2YzEzNyIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE0Mi4xOTguMTAzLjE0NiIsIjE0Mi4xMjYuMTgwLjE2NiJdLCJ0eXBlIjoiY2xpZW50In1dfQ.3k8c1cIEQgKpyrdKhTBtuTidotVPGTKGg4G-fRbNEvef4TxqvFAQmvIpHBjm2gvko8Sb3iRBFbZCVVw2Y_cpeA" 
 }
 
+class API:
+    def __init__(self, user_tag, api):
+        self.user_tag = user_tag
+        self.json_data = {
+            "token": str(api)
+        }
+        #api is one time use, no point of storing it 
+    def get_stats(self):
+        #logic might be broken
+        url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}/verifytoken"
+
+        response = requests.post(url, headers=headers, json = self.json_data)
+        self.storage = response.json() # Important!! this storage now holds whether the api key is valid or not
+
+        return
+        
+
 class Advertisement:
 
     def __init__(self, requirements, Recruiter):
@@ -43,45 +60,14 @@ class Recruiter:
 
 
 class Recruitee:
+    # everything here now needs to call back to api request
 
-        def __init__(self, name, user_tag, api):
-            self.name = name
-            self.user_tag = user_tag
-            self.json_data = {
-                "token": str(api)
-            }
-            #api is one time use, no point of storing it 
-        def get_stats(self):
-            #logic might be broken
-            url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}/verifytoken"
-
-            response = requests.post(url, headers=headers, json = self.json_data)
-            self.storage = response.json()
-            #try: 
-            #    self.storage['reason'] == 'notFound'
-            #    print("User doesn't exist!")
-            #except:
-            #    for key in self.storage:
-            #        if key == "leagueTier":
-            #            league = self.storage[key]["name"]
-                        #Get the int of the league that recruitee is in
-            #            y=""
-            #            for ch in league:
-            #                if ch.isdigit():
-            #                    y += ch 
-            #        elif key == "townHallLevel":
-            #            th_level = self.storage[key]
-                    
-                        
-            # print(th_level, league)
-            #stats = [th_level, int(y)]    
-            return
-        
         def apply(self, Recruiter):
             stats = self.get_stats()
             eligibility = True
             for i in range(2):
 
+                # this is for sure broken    
                 if stats[i-1] >= Recruiter.get_requirements()[i-1]:
                     continue
                 else:
@@ -131,6 +117,7 @@ def get_user():
                 invalid_input = False
             else: print("Invalid input")
 
+        # this is now broken
         if looking_for_clan == 'yes':
             lfc = Recruitee(name, user_tag)
             lfc.name = input("Enter your ")
@@ -154,7 +141,7 @@ def get_user():
         name = input("Recruitee, Please enter your name: ")
         user_tag = input("Recruitee, Please enter your user tag: #")
         api = input("Recruitee, Please enter your API token")
-        re = Recruitee(name, user_tag, api)
+        re = API(name, user_tag, api)
         re.get_stats()
         print(re.storage)
 
