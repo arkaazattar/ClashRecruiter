@@ -5,6 +5,13 @@ headers = {
     "Content-Type" : "application/json",
     "Authorization" :"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6ImRlYTUzNWVhLTljYTAtNDFmMC04MDJlLWIzZjk4YzAyMmMxNCIsImlhdCI6MTc2MjY0NzgxMSwic3ViIjoiZGV2ZWxvcGVyLzI4NjU3YTI4LTk5NWQtYmY3YS05NzRlLWEwNDViMWU2YzEzNyIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjE0Mi4xOTguMTAzLjE0NiIsIjE0Mi4xMjYuMTgwLjE2NiJdLCJ0eXBlIjoiY2xpZW50In1dfQ.3k8c1cIEQgKpyrdKhTBtuTidotVPGTKGg4G-fRbNEvef4TxqvFAQmvIpHBjm2gvko8Sb3iRBFbZCVVw2Y_cpeA" 
 }
+
+class Advertisement:
+
+    def __init__(self, requirements, Recruiter):
+        self.requirements = requirements
+
+    
 class Recruiter:
     requirements = []
 
@@ -25,7 +32,7 @@ class Recruiter:
         #print(self.storage)
 
     def post_ad(self):
-        print("Hello World")
+        print(self.requirements)
 
     def set_requirements(self, th_level, League):
 
@@ -35,37 +42,40 @@ class Recruiter:
         return self.requirements
 
 
-class Recuitee:
+class Recruitee:
 
-        def __init__(self, name, user_tag):
+        def __init__(self, name, user_tag, api):
             self.name = name
             self.user_tag = user_tag
-        
+            self.json_data = {
+                "token": str(api)
+            }
+            #api is one time use, no point of storing it 
         def get_stats(self):
             #logic might be broken
-            response = requests.get(
-                'https://api.clashofclans.com/v1/players/%23'+self.user_tag, headers = headers)
-            storage = response.json()
-        # print(storage)
-            try: 
-                storage['reason'] == 'notFound'
-                print("User doesn't exist!")
-            except:
-                for key in storage:
-                    if key == "leagueTier":
-                        league = storage[key]["name"]
+            url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}/verifytoken"
+
+            response = requests.post(url, headers=headers, json = self.json_data)
+            self.storage = response.json()
+            #try: 
+            #    self.storage['reason'] == 'notFound'
+            #    print("User doesn't exist!")
+            #except:
+            #    for key in self.storage:
+            #        if key == "leagueTier":
+            #            league = self.storage[key]["name"]
                         #Get the int of the league that recruitee is in
-                        y=""
-                        for ch in league:
-                            if ch.isdigit():
-                                y += ch 
-                    elif key == "townHallLevel":
-                        th_level = storage[key]
+            #            y=""
+            #            for ch in league:
+            #                if ch.isdigit():
+            #                    y += ch 
+            #        elif key == "townHallLevel":
+            #            th_level = self.storage[key]
                     
                         
             # print(th_level, league)
-            stats = [th_level, int(y)]    
-            return stats
+            #stats = [th_level, int(y)]    
+            return
         
         def apply(self, Recruiter):
             stats = self.get_stats()
@@ -79,6 +89,7 @@ class Recuitee:
 
             if eligibility == True:
                 print("Applied")    
+
             else:
                 print("not eligible")
 
@@ -103,6 +114,7 @@ def get_user():
                 clan_tag = clan_tag[1:]
             clan = Recruiter(name, clan_tag)
             clan.get_clan_info()
+            print(clan.storage)
 
             if clan.storage.get('reason') == 'notFound':
                 print("Clan not found, try again.")
@@ -120,7 +132,8 @@ def get_user():
             else: print("Invalid input")
 
         if looking_for_clan == 'yes':
-            pass
+            lfc = Recruitee(name, user_tag)
+            lfc.name = input("Enter your ")
 
         if looking_for_clan == "no":
             return(print("Thank you for trying our app."))
@@ -140,9 +153,12 @@ def get_user():
         #INITIALIZE RECRUITEE
         name = input("Recruitee, Please enter your name: ")
         user_tag = input("Recruitee, Please enter your user tag: #")
-        re = Recuitee(name, user_tag)
+        api = input("Recruitee, Please enter your API token")
+        re = Recruitee(name, user_tag, api)
+        re.get_stats()
+        print(re.storage)
 
-        re.apply(rr)
+       # re.apply(rr)
 
     elif recruiting == "Yes":
         name = input("Name: ")
@@ -158,14 +174,14 @@ def get_user():
         # user_test.get_clan_info()
 
 
-    elif recruiting == "No":
-        name = input("Please enter your name: ")
-        user_tag = input("Please enter your user tag: #")
-
-        rt = Recuitee(name, user_tag)
-
-        rt.get_stats()
-        
+    #elif recruiting == "No":
+    #    name = input("Please enter your name: ")
+    #    user_tag = input("Please enter your user tag: #")
+#
+ #       rt = Recruitee(name, user_tag)
+#
+ #       rt.get_stats()
+    else:
         acpt_input = True
         while acpt_input:
             user_tag = input("Please enter your user tag: #")
