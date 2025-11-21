@@ -9,18 +9,33 @@ headers = {
 class API:
     def __init__(self, user_tag, api):
         self.user_tag = user_tag
+        self.token = False
         self.json_data = {
             "token": str(api)
         }
         #api is one time use, no point of storing it 
-    def get_stats(self):
+    def check_player_api(self):
         #logic might be broken
         url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}/verifytoken"
 
         response = requests.post(url, headers=headers, json = self.json_data)
         self.storage = response.json() # Important!! this storage now holds whether the api key is valid or not
 
-        return
+ 
+        if self.storage.get("reason") == "notFound":
+            print("Player tag is incorrect.")
+
+        elif self.storage.get("status") == "invalid":
+            print("API Token is incorrect.")
+
+        elif self.storage.get("status") == "ok":
+            self.token = True # set token value to 1 in boolean. this makes it easy to check if token info is correct
+            print("API Token is correct")
+
+        else: print(f"Unknown Error {self.storage}")  
+
+        return self.token
+
         
 
 class Advertisement:
@@ -140,10 +155,10 @@ def get_user():
         #INITIALIZE RECRUITEE
         name = input("Recruitee, Please enter your name: ")
         user_tag = input("Recruitee, Please enter your user tag: #")
-        api = input("Recruitee, Please enter your API token")
-        re = API(name, user_tag, api)
-        re.get_stats()
-        print(re.storage)
+        api = input("Recruitee, Please enter your API token: ")
+        re = API(user_tag, api)
+        re.check_player_api()
+        #print(re.storage)
 
        # re.apply(rr)
 
