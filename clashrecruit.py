@@ -135,11 +135,8 @@ def get_user():
                 clan_tag = clan_tag[1:]
             clan = Recruiter(user_tag, clan_tag)
             
-            if clan.storage.get('reason') == 'notFound':
-                print("Clan not found, try again.")
-            else:
+            if clan.check_if_leader() == True:
                 invalid_clan = False
-            print(clan.check_if_leader())
             #print(clan.storage)
 
     
