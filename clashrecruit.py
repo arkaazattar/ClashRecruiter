@@ -8,8 +8,8 @@ headers = {
 
 class API:
     def __init__(self, user_tag, api):
-        self.user_tag = ""
         self.token = False
+        self.user_tag = user_tag
         self.reason = 0
         self.json_data = {
             "token": str(api)
@@ -33,6 +33,7 @@ class API:
 
         else: self.reason = self.storage  
 
+        print(self.storage)
         return self.token #dont really need to store token in class, as its being returned anyways. keeping for now in the case that we need it for error checking.
 
 class Advertisement:
@@ -41,7 +42,7 @@ class Advertisement:
         self.requirements = requirements
 
     
-class Recruiter:
+class Recruiter: # error checking needs to be done out of class
     
     requirements = []
 
@@ -53,21 +54,20 @@ class Recruiter:
         print(self.user_tag + " " + self.clan_tag)
 
     def check_if_leader(self):
-        roles = ["coLeader", "Elder"]
+        roles = ["leader", "coleader", "admin"]
         is_leader =  False
         #GET API INFO
         response = requests.get(
-            f"https://api.clashofclans.com/v1/clans/%23{self.clan_tag}")
+            f"https://api.clashofclans.com/v1/clans/%23{self.clan_tag}/members", headers = headers)
         #Store api info
         self.storage = response.json()
         #print(self.storage)
         large_list = self.storage.get("items")
-        print(large_list)
-        for i in large_list:
-            if large_list[i].get("tag") == self.user_tag:
-                if large_list[i].get("role") in roles:
+        #print(large_list)
+        for player_info in large_list:    
+            if (player_info.get("tag"))[1:] == self.user_tag: #user_tag needs to never have a #
+                if player_info.get("role").lower() in roles:
                   is_leader = True
-
         return is_leader     
 
 
@@ -116,7 +116,7 @@ def get_user():
             # get user api regardless of whether they are looking for clan or not
             valid_api = False
             while  valid_api == False:
-                user_tag = input("Please enter your player tag: ")
+                user_tag = input("Please enter your player tag: #")
                 api = input("Please enter your API token: ")
                 user = API(user_tag, api)
                 user.check_player_api()
@@ -130,18 +130,17 @@ def get_user():
     if recruiting == 'yes': #need to implement calling of other functtions
         invalid_clan = True
         while invalid_clan:
-            clan_tag = input("Enter Clan Tag: ")
+            clan_tag = input("Enter Clan Tag: #")
             if clan_tag[0] == '#':
                 clan_tag = clan_tag[1:]
             clan = Recruiter(user_tag, clan_tag)
-            clan.check_if_leader()
-            print(clan.storage)
-
+            
             if clan.storage.get('reason') == 'notFound':
                 print("Clan not found, try again.")
             else:
                 invalid_clan = False
-        print("Exited loop, clan is real")
+            print(clan.check_if_leader())
+            #print(clan.storage)
 
     
     elif recruiting == 'no' : # case that they are looking for a clan
