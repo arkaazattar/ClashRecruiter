@@ -10,6 +10,7 @@ class API:
     def __init__(self, user_tag, api):
         self.user_tag = user_tag
         self.token = False
+        self.reason = 0
         self.json_data = {
             "token": str(api)
         }
@@ -21,22 +22,18 @@ class API:
         response = requests.post(url, headers=headers, json = self.json_data)
         self.storage = response.json() # Important!! this storage now holds whether the api key is valid or not
 
- 
         if self.storage.get("reason") == "notFound":
-            print("Player tag is incorrect.")
+            self.reason = "Player tag is incorrect" 
 
         elif self.storage.get("status") == "invalid":
-            print("API Token is incorrect.")
+            self.reason = "API Token is incorrect"
 
         elif self.storage.get("status") == "ok":
             self.token = True # set token value to 1 in boolean. this makes it easy to check if token info is correct
-            print("API Token is correct")
 
-        else: print(f"Unknown Error {self.storage}")  
+        else: self.reason = self.storage  
 
-        return self.token
-
-        
+        return self.token #dont really need to store token in class, as its being returned anyways. keeping for now in the case that we need it for error checking.
 
 class Advertisement:
 
@@ -104,6 +101,17 @@ def get_user():
         recruiting = input("Are you recuiting? Yes or no: ").lower()
         if recruiting == "yes" or  recruiting == "no" or recruiting == 'test':
             invalid_input = False
+            
+            # get user api regardless of whether they are looking for clan or not
+            user = API(user_tag, api)
+            valid_api = False
+            while  valid_api == False:
+                user.user_tag = input("Please enter your player tag: ")
+                user.api = input("Please enter your API token: ")
+                user.check_player_api()
+                if user.token == True:
+                    valid_api = True
+                else: print(f" {user.reason}, try again") 
         else: print("Invalid input")
     
     if recruiting == 'yes': #need to implement calling of other functtions
