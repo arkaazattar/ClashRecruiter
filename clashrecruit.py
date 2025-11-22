@@ -42,23 +42,34 @@ class Advertisement:
 
     
 class Recruiter:
+    
     requirements = []
 
-    def __init__(self, name, clan_tag):
-        self.name = name
+    def __init__(self, user_tag, clan_tag):
+        self.user_tag = user_tag
         self.clan_tag = clan_tag
 
-    def print_info(self):
-        print(self.name + " " + self.clan_tag)
+    def print_info(self): # idk why we would need this 
+        print(self.user_tag + " " + self.clan_tag)
 
-    def get_clan_info(self):
-
+    def check_if_leader(self):
+        roles = ["coLeader", "Elder"]
+        is_leader =  False
         #GET API INFO
         response = requests.get(
-            'https://api.clashofclans.com/v1/clans/%23'+self.clan_tag, headers = headers)
+            f"https://api.clashofclans.com/v1/clans/%23{self.clan_tag}")
         #Store api info
         self.storage = response.json()
         #print(self.storage)
+        large_list = self.storage.get("items")
+        print(large_list)
+        for i in large_list:
+            if large_list[i].get("tag") == self.user_tag:
+                if large_list[i].get("role") in roles:
+                  is_leader = True
+
+        return is_leader     
+
 
     def post_ad(self):
         print(self.requirements)
@@ -111,18 +122,19 @@ def get_user():
                 user.check_player_api()
                 if user.token == True:
                     valid_api = True
-                else: print(f" {user.reason}, try again") 
+                else: print(f"{user.reason}, try again") 
         else: print("Invalid input")
     
+    # will not reach here unelss the api key is valid
+
     if recruiting == 'yes': #need to implement calling of other functtions
         invalid_clan = True
         while invalid_clan:
-            name = input("Enter Name: ")
             clan_tag = input("Enter Clan Tag: ")
             if clan_tag[0] == '#':
                 clan_tag = clan_tag[1:]
-            clan = Recruiter(name, clan_tag)
-            clan.get_clan_info()
+            clan = Recruiter(user_tag, clan_tag)
+            clan.check_if_leader()
             print(clan.storage)
 
             if clan.storage.get('reason') == 'notFound':
@@ -216,3 +228,5 @@ get_user()
 #jon was here
 #arkaaz was here
 #testing for jon
+
+
