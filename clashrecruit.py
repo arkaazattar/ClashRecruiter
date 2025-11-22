@@ -8,7 +8,7 @@ headers = {
 
 class API:
     def __init__(self, user_tag, api):
-        self.user_tag = user_tag
+        self.user_tag = ""
         self.token = False
         self.reason = 0
         self.json_data = {
@@ -103,11 +103,11 @@ def get_user():
             invalid_input = False
             
             # get user api regardless of whether they are looking for clan or not
-            user = API(user_tag, api)
             valid_api = False
             while  valid_api == False:
-                user.user_tag = input("Please enter your player tag: ")
-                user.api = input("Please enter your API token: ")
+                user_tag = input("Please enter your player tag: ")
+                api = input("Please enter your API token: ")
+                user = API(user_tag, api)
                 user.check_player_api()
                 if user.token == True:
                     valid_api = True
