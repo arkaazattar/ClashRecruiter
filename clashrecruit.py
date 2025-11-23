@@ -79,6 +79,21 @@ class Recruiter: # error checking needs to be done out of class
                   is_leader = True
         return is_leader     
 
+    def pull_clan_requirements(self):
+        
+        response = requests.get(f"https://api.clashofclans.com/v1/clans/%{self.clan_tag}", headers=headers)
+        self.storage = response.json
+
+        #need to pull, required trophies, required builder base trophies, required townhall level,
+        #required trophies doesnt work till api is changed
+        #leaving blank for now
+    
+    def new_clan_requirements(self, required_league, required_builder_trophies, required_townhall, required_builderhall):
+        self.required_league = required_league
+        self.required_builder_trophies = required_builder_trophies 
+        self.required_townhall = required_townhall
+        self.required_builderhall = required_builderhall
+
     def post_ad(self):
         print(self.requirements)
 
@@ -131,10 +146,14 @@ def recruiting(user_tag):
         except:
             continue
         clan = Recruiter(user_tag, clan_tag)
-        if clan.check_if_leader() == True:
+        is_leader = clan.check_if_leader()
+        if is_leader == True:
             invalid_clan = False
+        elif is_leader == False:
+            print("Not Elder, Coleader, or Leader") # need to test
+            return False
         else: print("Clan not found, try again?")
-    return
+    return True
         #print(clan.storage)
 
 def recruitee():
@@ -148,11 +167,17 @@ def recruitee():
         else: print("Invalid input")
     return
 
+
 def get_user():
     response = ask_if_recruiting()
     user_tag = check_api()
     if response == "yes":
-        recruiting(user_tag)
+        if recruiting(user_tag) == False:
+            return # this return might be bad, not a graceful exit
+        else: 
+            # need to figure out how to call a clan tag for that function, basically need to store the clan tag and then call new_clan_requirements() to store parameters for that clan
+            pass
+            
     if response == "no":
         recruitee()
 
