@@ -85,77 +85,60 @@ class Recruiter: # error checking needs to be done out of class
 class Recruitee:
     # everything here now needs to call back to api request
 
-        def apply(self, Recruiter):
-            stats = self.get_stats()
-            eligibility = True
-            for i in range(2):
+    def __init__(self, user_tag):
+        self.user_tag = user_tag
 
-                # this is for sure broken    
-                if stats[i-1] >= Recruiter.get_requirements()[i-1]:
-                    continue
-                else:
-                    eligibility = False
-
-            if eligibility == True:
-                print("Applied")    
-
-            else:
-                print("not eligible")
-
-                
-def get_user():
-    # list of all league names, lowest to highest - prob not needed
-    league_list = ["Skeleton", "Barbarian", "Archer", "Wizard", "Valkyrie", "Witch", "Golem", "P.E.K.K.A", "Titan", "Dragon", "Electro", "Legend"]
-    
+def ask_if_recruiting():
     invalid_input = True
     while invalid_input:
         recruiting = input("Are you recuiting? Yes or no: ").lower()
         if recruiting == "yes" or  recruiting == "no" or recruiting == 'test':
             invalid_input = False
-            
-            # get user api regardless of whether they are looking for clan or not
-            valid_api = False
-            while  valid_api == False:
-                user_tag = input("Please enter your player tag: #")
-                api = input("Please enter your API token: ")
-                user = API(user_tag, api)
-                user.check_player_api()
-                if user.token == True:
-                    valid_api = True
-                else: print(f"{user.reason}, try again") 
         else: print("Invalid input")
-    
-    # will not reach here unelss the api key is valid
+    return recruiting # returns yes, no, or test
 
-    if recruiting == 'yes': #need to implement calling of other functtions
-        invalid_clan = True
-        while invalid_clan:
-            clan_tag = input("Enter Clan Tag: #")
-            if clan_tag[0] == '#':
-                clan_tag = clan_tag[1:]
-            clan = Recruiter(user_tag, clan_tag)
-            
-            if clan.check_if_leader() == True:
-                invalid_clan = False
-            #print(clan.storage)
+def check_api():
+    valid_api = False
+    while valid_api == False:
+        user_tag = input("Please enter your player tag: #")
+        api = input("Please enter your API token: ")
+        user = API(user_tag, api)
+        user.check_player_api()
+        if user.token == True:
+            valid_api = True
+        else: print(f"{user.reason}, try again") 
+    return(user_tag)
 
-    
-    elif recruiting == 'no' : # case that they are looking for a clan
-        invalid_input = True
-        while invalid_input:
-            looking_for_clan = input("Are you looking for a clan? Yes or no: ").lower()
-            if looking_for_clan == "yes" or  looking_for_clan == "no":
-                invalid_input = False
-            else: print("Invalid input")
-
-        # this is now broken
-        if looking_for_clan == 'yes':
-            lfc = Recruitee(name, user_tag)
-            lfc.name = input("Enter your ")
-
-        if looking_for_clan == "no":
-            return(print("Thank you for trying our app."))
+def recruiting(user_tag): 
+    invalid_clan = True
+    while invalid_clan:
+        clan_tag = input("Enter Clan Tag: #")
+        if clan_tag[0] == '#':
+            clan_tag = clan_tag[1:]
+        clan = Recruiter(user_tag, clan_tag)
         
+        if clan.check_if_leader() == True:
+            invalid_clan = False
+    return
+        #print(clan.storage)
+
+def recruitee():
+    invalid_input = True
+    while invalid_input:
+        looking_for_clan = input("Are you looking for a clan? Yes or no: ").lower()
+        if looking_for_clan == "yes" or  looking_for_clan == "no":
+            invalid_input = False
+        else: print("Invalid input")
+
+def get_user():
+    response = ask_if_recruiting()
+    user_tag =check_api()
+    if response == "yes":
+        recruiting(user_tag)
+    if response == "no":
+        recruitee()
+
+    
 
 
 #TESTING OBJECTS HERE !! !! !!
@@ -176,48 +159,7 @@ def get_user():
         re.check_player_api()
         #print(re.storage)
 
-       # re.apply(rr)
 
-    elif recruiting == "Yes":
-        name = input("Name: ")
-        
-        get_inputs = True
-        while get_inputs:
-            
-            clan_tag = input("Clan tag: ")
-
-
-        user_test = Recruiter(name, clan_tag)
-        user_test.print_info()
-        # user_test.get_clan_info()
-
-
-    #elif recruiting == "No":
-    #    name = input("Please enter your name: ")
-    #    user_tag = input("Please enter your user tag: #")
-#
- #       rt = Recruitee(name, user_tag)
-#
- #       rt.get_stats()
-    else:
-        acpt_input = True
-        while acpt_input:
-            user_tag = input("Please enter your user tag: #")
-            response = requests.get(
-                'https://api.clashofclans.com/v1/players/%23'+user_tag, headers = headers)
-            storage = response.json()
-        
-            print(storage)
-        
-            try: 
-                storage['reason'] == 'notFound'
-                print("User doesn't exist!")
-            except:
-                for key in storage:
-                    if key == "leagueTier":
-                        league = storage[key]["name"]
-                        print(league)
-                        acpt_input = False
             
         
 get_user()
