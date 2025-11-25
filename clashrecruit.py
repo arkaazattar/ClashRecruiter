@@ -61,7 +61,7 @@ class Recruiter: # error checking needs to be done out of class
         print(self.user_tag + " " + self.clan_tag)
 
     def check_if_leader(self):
-        roles = ["leader", "coleader", "admin"]
+        roles = ["leader", "coleader", "admin"] #admin is elder r we 
         is_leader =  False
         #GET API INFO
         response = requests.get(
@@ -81,27 +81,82 @@ class Recruiter: # error checking needs to be done out of class
 
     def pull_clan_requirements(self):
         
-        response = requests.get(f"https://api.clashofclans.com/v1/clans/%{self.clan_tag}", headers=headers)
-        self.storage = response.json
+       # params = {
+       #     "name" : self.clan_tag,
+       # }
+
+        response = requests.get(f"https://api.clashofclans.com/v1/clans?name=%23{self.clan_tag}", headers=headers)
+        self.storage = response.json()
+ 
+        long_list = self.storage.get("items")
+        
+        for i in range(len(long_list)):
+            required_townhall = long_list[i].get('requiredTownhallLevel')
+            required_builder_trophies = long_list[i].get('requiredBuilderBaseTrophies')
+
+        
+        required_league = int(input("Enter required league number: "))
+        self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
 
         #need to pull, required trophies, required builder base trophies, required townhall level,
         #required trophies doesnt work till api is changed
         #leaving blank for now
-    
-    def new_clan_requirements(self, required_league, required_builder_trophies, required_townhall, required_builderhall):
+
+  
+        invalid = True
+        while invalid:
+            change_requirements = input(f"Do you want to change the townhall requirements from clans default requirements ({required_townhall})? Yes or no: ").lower()
+            if change_requirements == "yes":
+                required_townhall = int(input("New Townhall requirement: ")) #error handling later
+                self.set_townhall_requirement(required_townhall)
+                invalid = False
+            elif change_requirements == "no":
+                invalid = False
+            else: 
+                print("Invalid input")
+                
+        invalid = True
+        while invalid:
+            change_requirements = input(f"Do you want to change the builder trophy requirements from clans default requirements ({required_builder_trophies})? Yes or no: ").lower()
+            if change_requirements == "yes":
+
+                required_builder_trophies = int(input("New builder trophies requirement: ")) #error handling later
+
+                self.set_builder_trophies_requirement(required_builder_trophies)
+                invalid = False
+            elif change_requirements == "no":
+                invalid = False
+            else: 
+                print("Invalid input")
+
+        print("Set required league") #ts will go away
+        self.set_league_requirement(required_league)
+
+        
+        self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
+
+#setters
+    def set_townhall_requirement(self, required_townhall):
+        self.required_townhall = required_townhall
+
+    def set_builder_trophies_requirement(self, required_builder_trophies):
+        self.required_builder_trophies = required_builder_trophies
+
+    def set_league_requirement(self, required_league):
+        self.required_league = required_league
+
+#change list of requirements        
+    def new_clan_requirements(self, required_league, required_builder_trophies, required_townhall):
         self.required_league = required_league
         self.required_builder_trophies = required_builder_trophies 
         self.required_townhall = required_townhall
-        self.required_builderhall = required_builderhall
+        self.requirements = [self.required_league, self.required_builder_trophies, self.required_townhall]
 
     def post_ad(self):
         print(self.requirements)
 
-    def set_requirements(self, th_level, League):
-
-        self.requirements = [th_level, League]
-
     def get_requirements(self):
+        print(self.requirements)
         return self.requirements
 
 
@@ -110,6 +165,11 @@ class Recruitee:
 
     def __init__(self, user_tag):
         self.user_tag = user_tag
+
+
+
+
+        
 
 def ask_if_recruiting():
     invalid_input = True
@@ -148,13 +208,15 @@ def recruiting(user_tag):
         clan = Recruiter(user_tag, clan_tag)
         is_leader = clan.check_if_leader()
         if is_leader == True:
+            clan.pull_clan_requirements()
+            clan.get_requirements()
+
             invalid_clan = False
         elif is_leader == False:
-            print("Not Elder, Coleader, or Leader") # need to test
+            print("Not Elder, Coleader, or Leader") 
             return False
         else: print("Clan not found, try again?")
     return True
-        #print(clan.storage)
 
 def recruitee():
     invalid_input = True
@@ -175,15 +237,15 @@ def get_user():
         if recruiting(user_tag) == False:
             return # this return might be bad, not a graceful exit
         else: 
-            # need to figure out how to call a clan tag for that function, basically need to store the clan tag and then call new_clan_requirements() to store parameters for that clan
             pass
-            
+            # need to figure out how to call a clan tag for that function, basically need to store the clan tag and then call new_clan_requirements() to store parameters for that clan
+
     if response == "no":
         recruitee()
 
     
 
-#TESTING OBJECTS HERE !! !! !! ts dont work anymore </3
+#TESTING OBJECTS HERE !! !! !! ts dont work anymore </3 ty bbg
     if recruiting == "test":
         #INITIALIZE RECRUITER TEST
         name = input("Recruiter Name: ")
