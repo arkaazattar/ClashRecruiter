@@ -1,2 +1,2 @@
 apiKey.py
- 'pycache/*'
+__pycache__/
