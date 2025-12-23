@@ -245,25 +245,7 @@ def get_user():
     if response == "no":
         recruitee()
 
-    
 
-#TESTING OBJECTS HERE !! !! !! ts dont work anymore </3 ty bbg
-    if recruiting == "test":
-        #INITIALIZE RECRUITER TEST
-        name = input("Recruiter Name: ")
-        clan_tag = input("Clan tag: ")
-        rr = Recruiter(name, clan_tag)
-        #SET REQUIREMENTS FOR CLAN FOR RECRUITER
-        th_req = input("Enter Townhall requirement: ")
-        league_req = input("Enter League requirement number: ")
-        rr.set_requirements(int(th_req), int(league_req))
-        #INITIALIZE RECRUITEE
-        name = input("Recruitee, Please enter your name: ")
-        user_tag = input("Recruitee, Please enter your user tag: #")
-        api = input("Recruitee, Please enter your API token: ")
-        re = API(user_tag, api)
-        re.check_player_api()
-        #print(re.storage)
 
 
             
