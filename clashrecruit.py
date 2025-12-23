@@ -136,7 +136,17 @@ class Recruiter: # error checking needs to be done out of class
 
         
         self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
+        
+        valid_input = False
+        while(False):
+            if (input("Do you want to post an ad? (Yes/No)").lower) == "yes" or "no":
+                self.post_ad()
+                valid_input = True
+            else:  
+                (print("Invalid Input"))
 
+        
+        
 #setters
     def set_townhall_requirement(self, required_townhall):
         self.required_townhall = required_townhall
