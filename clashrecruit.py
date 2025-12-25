@@ -62,25 +62,6 @@ class Recruiter: # error checking needs to be done out of class
     def print_info(self): # idk why we would need this 
         print(self.user_tag + " " + self.clan_tag)
 
-    def check_if_leader(self):
-        roles = ["leader", "coleader", "admin"] #admin is elder r we 
-        is_leader =  False
-        #GET API INFO
-        response = requests.get(
-            f"https://api.clashofclans.com/v1/clans/%23{self.clan_tag}/members", headers = headers)
-        #Store api info
-        self.storage = response.json()
-        #print(self.storage)
-        if self.storage.get("reason") == "notFound":
-            return
-        large_list = self.storage.get("items")
-        #print(large_list)
-        for player_info in large_list:    
-            if (player_info.get("tag"))[1:] == self.user_tag: #user_tag needs to never have a #
-                if player_info.get("role").lower() in roles:
-                  is_leader = True
-        return is_leader     
-
     def pull_clan_requirements(self):
         
        # params = {
@@ -208,27 +189,42 @@ def check_api():
         else: print(f"{user.reason}, try again") 
     return(user_tag)
 
-def recruiting(user_tag): 
-    invalid_clan = True
-    while invalid_clan:
-        clan_tag = input("Enter Clan Tag: #")
-        try:   
-            if clan_tag[0] == '#':
-                clan_tag = clan_tag[1:]
-        except:
-            continue
-        clan = Recruiter(user_tag, clan_tag)
-        is_leader = clan.check_if_leader()
-        if is_leader == True:
-            clan.pull_clan_requirements()
-            clan.get_requirements()
+def recruiting(user_tag): # this should automatically load their clan, no need to type in clan tag
+    roles = ["leader", "coleader", "admin"] #admin is elder r we 
+    response = requests.get(f"https://api.clashofclans.com/v1/players/%23{user_tag}", headers=headers)
+    data = response.json()
+    clan_tag = data.get("clan", {}).get("tag", 0)
+    if(clan_tag == 0):
+        print("not in clan")
+        return(False)
+    
+    if(data["role"].lower() not in roles):
+        print("not a leader")
+        return(False)
+    
+    return(True)
+    ## needs testing
 
-            invalid_clan = False
-        elif is_leader == False:
-            print("Not Elder, Coleader, or Leader") 
-            return False
-        else: print("Clan not found, try again?")
-    return True
+#     invalid_clan = True
+#     while invalid_clan:
+#         clan_tag = input("Enter Clan Tag: #")
+#         try:   
+#             if clan_tag[0] == '#':
+#                 clan_tag = clan_tag[1:]
+#         except:
+#             continue
+#         clan = Recruiter(user_tag, clan_tag)
+#         is_leader = clan.check_if_leader()
+#         if is_leader == True:
+#             clan.pull_clan_requirements()
+#             clan.get_requirements()
+
+#             invalid_clan = False
+#         elif is_leader == False:
+#             print("Not Elder, Coleader, or Leader") 
+#             return False
+#         else: print("Clan not found, try again?")
+#     return True
 
 def recruitee():
     invalid_input = True
