@@ -203,28 +203,6 @@ def recruiting(user_tag): # this should automatically load their clan, no need t
         return(False)
     
     return(True)
-    ## needs testing
-
-#     invalid_clan = True
-#     while invalid_clan:
-#         clan_tag = input("Enter Clan Tag: #")
-#         try:   
-#             if clan_tag[0] == '#':
-#                 clan_tag = clan_tag[1:]
-#         except:
-#             continue
-#         clan = Recruiter(user_tag, clan_tag)
-#         is_leader = clan.check_if_leader()
-#         if is_leader == True:
-#             clan.pull_clan_requirements()
-#             clan.get_requirements()
-
-#             invalid_clan = False
-#         elif is_leader == False:
-#             print("Not Elder, Coleader, or Leader") 
-#             return False
-#         else: print("Clan not found, try again?")
-#     return True
 
 def recruitee():
     invalid_input = True
