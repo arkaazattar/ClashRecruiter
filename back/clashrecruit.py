@@ -1,5 +1,5 @@
 import requests
-import back.apiKey as apiKey
+import apiKey 
 import time 
 
 headers = {
