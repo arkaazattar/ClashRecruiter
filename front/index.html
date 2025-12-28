@@ -9,22 +9,25 @@
     <h1 style="text-align: center;"> Clash Recruit <h1>
     <hr>
     
-    <h4 style="text-align: center; margin-top: 100px; font-size: 25px;">Enter Player Tag:</h4>
-        <form style="text-align: center;">
-        <input>
-        </input id ="playerTag">
-
-
-         <h4 style="font-size: 25px;">Enter API Key:</h4>
+    <form id="dataForm" style="text-align: center;">
         
+        <h4 style="text-align: center; margin-top: 100px; font-size: 25px;">Enter Player Tag:</h4>
+        <input id = "playerTag">
+
+        <h4 style="font-size: 25px;">Enter API Key:</h4>        
         <input id ="apiToken">
-        </input>
+
         <br>
-        <br>
-    <input type="submit" value="Submit">
+        <input style="width: 100px; font-size: 20px ;" type="submit" value="Submit">
     </form>
     
 </body>
 <script>
-    
+    const form = document.getElementById("dataForm");
+    form.addEventListener("submit", function(event){
+        event.preventDefault();
+        const playerTag = document.getElementById("playerTag").value;
+        const apiToken = document.getElementById("apiToken").value;
+    })
+
 </script>
