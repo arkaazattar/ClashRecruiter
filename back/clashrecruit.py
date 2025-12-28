@@ -37,12 +37,12 @@ class API:
         if self.storage.get("status") == "invalid":
             self.reason = "API Token is incorrect"
 
+
         elif self.storage.get("status") == "ok":
             self.token = True # set token value to 1 in boolean. this makes it easy to check if token info is correct
 
         else: self.reason = self.storage  
-
-        print(self.storage)
+        
         return self.token #dont really need to store token in class, as its being returned anyways. keeping for now in the case that we need it for error checking.
 
 class Advertisement:
@@ -234,7 +234,7 @@ def get_user():
 
             
         
-get_user()
+# get_user()
 #jon was here
 #arkaaz was here
 #testing for jon
