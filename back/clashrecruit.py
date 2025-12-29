@@ -29,6 +29,10 @@ class API:
     
     def check_player_api(self):
         #logic might be broken
+
+        if (self.check_player() == False):
+            return False
+
         url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}/verifytoken"
 
         response = requests.post(url, headers=headers, json = self.json_data)

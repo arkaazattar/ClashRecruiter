@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head>
+    <title> ClashRecruit </title>   
+
+</head>
+
+<body style="background-color: rgb(191, 255, 234);" >
+    
+    <h1 style="text-align: center;"> Clash Recruit <h1>
+    <hr>
+    
+    <form id="dataForm" style="text-align: center;">
+        
+        <h4 style="text-align: center; margin-top: 100px; font-size: 25px;">Enter Player Tag:</h4>
+        <input id = "playerTag">
+
+        <h4 style="font-size: 25px;">Enter API Key:</h4>        
+        <input id ="apiToken">
+
+        <br>
+        <input style="width: 100px; font-size: 20px ;" type="submit" value="Submit">
+    </form>
+    <p id="result"></p>
+
+    
+</body>
+
+<script>
+    const form = document.getElementById("dataForm");
+    
+    form.addEventListener("submit", async function(event){
+        event.preventDefault(); // Stop the page from refreshing
+
+        // 1. Get the raw inputs
+        const playerTag = document.getElementById("playerTag").value;
+        const apiToken = document.getElementById("apiToken").value;
+
+        // 2. "Pack the Box" (Create a JS Object)
+        const dataToSend = { 
+            playerTag: playerTag, 
+            apiToken: apiToken 
+        };
+
+        // 3. call the Courier (Fetch)
+        // We use 'await' because the truck takes time to drive there and back
+        const response = await fetch('http://127.0.0.1:5000/verify-user', {
+            
+            // A. The Method: We are PUSHING data, so we use POST
+            method: 'POST', 
+            
+            // B. The Label: This tells Flask "Hey, I'm sending JSON!"
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            
+            // C. The Contents: We turn our JS Object into a text String
+            body: JSON.stringify(dataToSend) 
+        });
+
+        // 4. Open the Reply
+        const result = await response.json();
+        
+        if(result.message == true){
+            window.location.href ="/dashboard";
+        }
+        
+        else{
+
+            document.getElementById("result").innerText =
+      "Backend received player tag: " + result.receivedPlayerTag;
+                
+        }
+    })
+</script>
