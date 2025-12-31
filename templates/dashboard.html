@@ -10,7 +10,7 @@
         height: 15px;
         border: lightgrey;
         padding: 10px;
-    }
+    }   
     .container {
         display: flex;
         /* Aligns children to the right edge of the container */
@@ -28,6 +28,13 @@
                 <div class="box" style="text-align:center"> username </div>
             </button>
         </a>
+        
+
     </div>
+        <p style="text-align:right; margin-right:20px;">
+        Recruit Status: {{ recruit_status }}
+            </p>
     <hr>
 </body>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>

@@ -28,14 +28,14 @@
 
         const result = await response.json();
         
-        if(result.message == true){
+        if(result.message == true){ //change back to true
             window.location.href ="/dashboard";
         }
         
         else{
 
             document.getElementById("result").innerText =
-      "Backend received player tag: " + result.receivedPlayerTag;
+      "Result: " + result.receivedPlayerTag + "\n able to recruit: " + result.recruit_status ;
                 
         }
     })
