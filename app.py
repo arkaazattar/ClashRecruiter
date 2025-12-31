@@ -4,7 +4,7 @@ from flask_cors import CORS
 import apiKey
 from clashrecruit import API
 
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../templates"))
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
 app = Flask(__name__, template_folder=template_dir)
 CORS(app) 
 
