@@ -1,4 +1,3 @@
-
     const form = document.getElementById("dataForm");
     
     form.addEventListener("submit", async function(event){
