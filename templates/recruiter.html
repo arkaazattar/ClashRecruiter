@@ -1,6 +1,18 @@
-<!-- 
-<p>{{clan_tag}, {requirements}, {player_tag}}
-</p> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recruit</title> 
+</head>
+<body style="background-color: black; color: white;">
 
+  Clan Tag: {{ data.clan_tag }} <br>
+  Requirements: {{ data.requirements }} <br>
+  Player Tag: {{ data.player_tag }}
 
-<p>{{ clan_tag, requirements, player_tag }} </p>
+</body>
+<script>
+    const player_tag = "{{ data.player_tag }}";
+    console.log(player_tag);
+    console.log("test");
+</script>
+</html>
