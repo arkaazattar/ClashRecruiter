@@ -17,20 +17,20 @@ class API:
         self.json_data = {
             "token": str(api)
         }
+        self.clantag = ""
         #api is one time use, no point of storing it 
     def check_player(self):
         url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}"
         response = requests.get(url, headers=headers)
         self.storage = response.json()
-
+        self.clantag = self.storage.get("clan", {}).get("tag", None)
         if self.storage.get("reason") == "notFound":
             self.reason = "Player tag is incorrect"
-            return False    
+            return False  
         self.user_name = self.storage.get("name")
         return True
     
     def check_player_api(self):
-        #logic might be broken
 
         if (self.check_player() == False):
             return False
@@ -92,45 +92,45 @@ class Recruiter: # error checking needs to be done out of class
         #leaving blank for now
 
   
-        invalid = True
-        while invalid:
-            change_requirements = input(f"Do you want to change the townhall requirements from clans default requirements ({required_townhall})? Yes or no: ").lower()
-            if change_requirements == "yes":
-                required_townhall = int(input("New Townhall requirement: ")) #error handling later
-                self.set_townhall_requirement(required_townhall)
-                invalid = False
-            elif change_requirements == "no":
-                invalid = False
-            else: 
-                print("Invalid input")
+        # invalid = True
+        # while invalid:
+        #     change_requirements = input(f"Do you want to change the townhall requirements from clans default requirements ({required_townhall})? Yes or no: ").lower()
+        #     if change_requirements == "yes":
+        #         required_townhall = int(input("New Townhall requirement: ")) #error handling later
+        #         self.set_townhall_requirement(required_townhall)
+        #         invalid = False
+        #     elif change_requirements == "no":
+        #         invalid = False
+        #     else: 
+        #         print("Invalid input")
                 
-        invalid = True
-        while invalid:
-            change_requirements = input(f"Do you want to change the builder trophy requirements from clans default requirements ({required_builder_trophies})? Yes or no: ").lower()
-            if change_requirements == "yes":
+        # invalid = True
+        # while invalid:
+        #     change_requirements = input(f"Do you want to change the builder trophy requirements from clans default requirements ({required_builder_trophies})? Yes or no: ").lower()
+        #     if change_requirements == "yes":
 
-                required_builder_trophies = int(input("New builder trophies requirement: ")) #error handling later
+        #         required_builder_trophies = int(input("New builder trophies requirement: ")) #error handling later
 
-                self.set_builder_trophies_requirement(required_builder_trophies)
-                invalid = False
-            elif change_requirements == "no":
-                invalid = False
-            else: 
-                print("Invalid input")
+        #         self.set_builder_trophies_requirement(required_builder_trophies)
+        #         invalid = False
+        #     elif change_requirements == "no":
+        #         invalid = False
+        #     else: 
+        #         print("Invalid input")
 
-        print("Set required league") #ts will go away
-        self.set_league_requirement(required_league)
+        # print("Set required league") #ts will go away
+        # self.set_league_requirement(required_league)
 
         
-        self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
+        # self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
         
-        valid_input = False
-        while(False):
-            if (input("Do you want to post an ad? (Yes/No)").lower) == "yes" or "no":
-                self.post_ad()
-                valid_input = True
-            else:  
-                (print("Invalid Input"))
+        # valid_input = False
+        # while(False):
+        #     if (input("Do you want to post an ad? (Yes/No)").lower) == "yes" or "no":
+        #         self.post_ad()
+        #         valid_input = True
+        #     else:  
+        #         (print("Invalid Input"))
 
         
         

@@ -33,28 +33,43 @@ def verify_user():
         reason = "Valid User"
         name = user.user_name
         session["player_name"] = name
+        clan_tag = user.clantag
+        session["clan_tag"] = clan_tag
     else:
         status = False
         reason = f"{user.reason}"
         name = user.user_name
         session["player_name"] = name
+        clan_tag = user.clantag
+        session["clan_tag"] = clan_tag
 
     return jsonify({
         "message": status, 
         "receivedPlayerTag": reason,
         "recruit_status" : recruiting(received_tag),
-        "player_name" : name
+        "player_name" : name,
+        "clan_tag" : clan_tag
     })
 
 @app.route("/dashboard")
 def dashboard():
-        
         return render_template(
             "dashboard.html",
             username = session.get("player_name"),
             recruit_status = recruiting(session.get("player_tag")))
         
 
+@app.route("/recruiter")
+def recruit():
+    user = Recruiter(session.get("player_tag"), session.get("clan_tag"))
+    requirements = user.get_requirements()
+
+    data = {
+        "requirements":  user.get_requirements(),
+        "clan_tag": session.get("clan_tag"),
+        "player_tag": session.get("player_tag")
+    }
+    return render_template("recruiter.html", clan_tag = session.get("clan_tag"), data = data)
 
 
 if __name__ == "__main__":
