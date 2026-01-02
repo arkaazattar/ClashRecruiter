@@ -12,6 +12,7 @@ load_dotenv()
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "templates"))
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 CORS(app) 
 
 @app.route("/")
@@ -28,6 +29,7 @@ def verify_user():
     session["player_tag"] = received_tag
     received_token = data.get('apiToken')
     user = API(received_tag, received_token)
+    user.check_player()
     if (user.check_player_api() == True):
         status = True
         reason = "Valid User"
@@ -62,6 +64,7 @@ def dashboard():
 @app.route("/recruiter")
 def recruit():
     user = Recruiter(session.get("player_tag"), session.get("clan_tag"))
+    user.pull_clan_requirements()
     requirements = user.get_requirements()
 
     data = {
@@ -69,7 +72,7 @@ def recruit():
         "clan_tag": session.get("clan_tag"),
         "player_tag": session.get("player_tag")
     }
-    return render_template("recruiter.html", clan_tag = session.get("clan_tag"), data = data)
+    return render_template("recruiter.html", data = data)
 
 
 if __name__ == "__main__":

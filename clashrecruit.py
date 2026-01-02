@@ -24,6 +24,7 @@ class API:
         response = requests.get(url, headers=headers)
         self.storage = response.json()
         self.clantag = self.storage.get("clan", {}).get("tag", None)
+        self.clantag = self.clantag[1:]
         if self.storage.get("reason") == "notFound":
             self.reason = "Player tag is incorrect"
             return False  
@@ -59,11 +60,10 @@ class Advertisement:
     
 class Recruiter: # error checking needs to be done out of class
     
-    requirements = []
-
     def __init__(self, user_tag, clan_tag):
         self.user_tag = user_tag
         self.clan_tag = clan_tag
+        self.requirements = []
 
     def print_info(self): # idk why we would need this 
         print(self.user_tag + " " + self.clan_tag)
@@ -76,15 +76,14 @@ class Recruiter: # error checking needs to be done out of class
 
         response = requests.get(f"https://api.clashofclans.com/v1/clans?name=%23{self.clan_tag}", headers=headers)
         self.storage = response.json()
- 
         long_list = self.storage.get("items")
         
         for i in range(len(long_list)):
             required_townhall = long_list[i].get('requiredTownhallLevel')
             required_builder_trophies = long_list[i].get('requiredBuilderBaseTrophies')
+            required_league = 0
 
         
-        required_league = int(input("Enter required league number: "))
         self.new_clan_requirements(required_league, required_builder_trophies, required_townhall)
 
         #need to pull, required trophies, required builder base trophies, required townhall level,
@@ -155,7 +154,6 @@ class Recruiter: # error checking needs to be done out of class
         print(self.requirements)
 
     def get_requirements(self):
-        print(self.requirements)
         return self.requirements
 
 
