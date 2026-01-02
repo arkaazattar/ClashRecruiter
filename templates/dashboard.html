@@ -1,31 +1,17 @@
 <!DOCTYPE html>
 <head>
     <title> Dashboard | ClashRecruit </title>   
-
+    <link rel="stylesheet" href="{{url_for('static', filename='css/dashboard.css')}}">
 </head>
-<style>
-    .box{
-        background-color: white;
-        width: 100px;
-        height: 15px;
-        border: lightgrey;
-        padding: 10px;
-    }   
-    .container {
-        display: flex;
-        /* Aligns children to the right edge of the container */
-        justify-content: flex-end; 
-        height: 100px; /* Optional: visualize the container */
-    }
-</style>
 
 <body style="background-color: rgb(191, 255, 234);" >
     
     <h1 style="text-align: center;" style="size: 100px;" > Dashboard </h1>
     <div class="container">
-        <a target="_blank" href="https://www.clashofstats.com/players/sheep-tiger-82GVQYRRL/summary">
+        <!-- this link is not going to be here ofc-->
+        <a target="_blank" href="https://www.clashofstats.com/players/sheep-tiger-82GVQYRRL/summary"> 
         <button style="height: 50px;" id="user">
-                <div class="box" style="text-align:center"> username </div>
+                <div class="box" style="text-align:center"> {{username}} </div> 
             </button>
         </a>
         

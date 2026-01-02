@@ -13,6 +13,7 @@ class API:
         self.token = False
         self.user_tag = user_tag
         self.reason = 0 # should be string but wtv
+        self.user_name = "Guest"
         self.json_data = {
             "token": str(api)
         }
@@ -20,11 +21,12 @@ class API:
     def check_player(self):
         url = f"https://api.clashofclans.com/v1/players/%23{self.user_tag}"
         response = requests.get(url, headers=headers)
-        self.storage = response.json() 
+        self.storage = response.json()
 
         if self.storage.get("reason") == "notFound":
-            self.reason = "Player tag is incorrect" 
-            return False
+            self.reason = "Player tag is incorrect"
+            return False    
+        self.user_name = self.storage.get("name")
         return True
     
     def check_player_api(self):

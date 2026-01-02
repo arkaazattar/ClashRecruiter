@@ -1,0 +1,12 @@
+    .box{
+        background-color: white;
+        width: 100px;
+        height: 15px;
+        border: lightgrey;
+        padding: 10px;
+    }   
+    .container {
+        display: flex;
+        justify-content: flex-end; 
+        height: 100px; 
+    }

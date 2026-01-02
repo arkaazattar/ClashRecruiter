@@ -31,23 +31,28 @@ def verify_user():
     if (user.check_player_api() == True):
         status = True
         reason = "Valid User"
+        name = user.user_name
+        session["player_name"] = name
     else:
         status = False
         reason = f"{user.reason}"
+        name = user.user_name
+        session["player_name"] = name
 
     return jsonify({
         "message": status, 
         "receivedPlayerTag": reason,
-        "recruit_status" : recruiting(received_tag)
+        "recruit_status" : recruiting(received_tag),
+        "player_name" : name
     })
 
 @app.route("/dashboard")
 def dashboard():
         
-
-
-
-        return render_template("dashboard.html", recruit_status = recruiting(session.get("player_tag")))
+        return render_template(
+            "dashboard.html",
+            username = session.get("player_name"),
+            recruit_status = recruiting(session.get("player_tag")))
         
 
 
