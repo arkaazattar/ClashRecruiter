@@ -6,3 +6,5 @@ Disallow: /recruit
 
 Allow: /privacy
 Allow: /terms
+
+Sitemap: https://www.clashrecruit.com/sitemap.xml
