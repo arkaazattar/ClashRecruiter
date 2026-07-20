@@ -12,7 +12,6 @@ const legalPages = {
         title: "Introduction",
         body: [
           <>ClashRecruit is a web app that helps Clash of Clans players and clans connect for recruitment.</>,
-          <>Temporary deployment test: this privacy policy text was updated to verify the Docker automation.</>,
           <>This Privacy Policy explains how ClashRecruit collects, uses, stores, shares, and protects information when users access or use the service. ClashRecruit is currently operated as a hobby project.</>
         ]
       },
